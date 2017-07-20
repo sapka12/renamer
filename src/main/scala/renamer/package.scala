@@ -1,6 +1,8 @@
 import java.io.File
 import java.time.format.DateTimeFormatter
 
+import org.apache.commons.io.FileUtils
+
 package object renamer {
 
   def date(ts: Long): String = DateTimeFormatter.BASIC_ISO_DATE.format(
@@ -20,11 +22,16 @@ package object renamer {
     }
   }
 
-  def move(filepath: String, date: String): String = {
+  def decoratePath(filepath: String, folder: String, prefix: String): String = {
     val f = new File(filepath)
-    val folder = f.getParent
+    val parent = f.getParent
     val filename = f.getName
-    val path = if (folder.last == '/') folder else folder + "/"
-    path + date + "/" + date + "_" + filename
+    val path = if (parent.last == '/') parent else parent + "/"
+    path + folder + "/" + prefix + "_" + filename
+  }
+
+  def copy(file: File, destination: String) = {
+    FileUtils.copyFile(file, new File(destination))
+    println(s"$file copied to $destination")
   }
 }
