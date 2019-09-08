@@ -1,19 +1,13 @@
 package renamer
 
+import java.io.File
+import cats.data.Kleisli
+
 object Rename {
 
-  def main(args: Array[String]): Unit = {
-    val folder = args(0)
-
-    getListOfFiles(folder).foreach { file =>
-
-      val newPath = decoratePath(
-        file.getAbsolutePath,
-        month(file.lastModified),
-        date(file.lastModified)
-      )
-
-      copy(file, newPath)
-    }
+  def main(args: Array[String]): Unit = args.headOption.foreach{folder =>
+    val listFilesInFolder = Kleisli(getListOfFiles(_: String))
+    val createRenamedCopy = Kleisli(copyFiles(_: List[File]))
+    listFilesInFolder andThen createRenamedCopy apply folder unsafeRunSync()
   }
 }

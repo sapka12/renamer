@@ -1,3 +1,5 @@
+import java.io.File
+
 import org.scalatest.{FlatSpec, Matchers}
 import renamer._
 
@@ -22,18 +24,20 @@ class RenamerSpec extends FlatSpec with Matchers {
 
   behavior of "move"
 
+  val / = File.separator
+
   it should "rename and put to folder" in {
-    val originalFilePath = "/file.txt"
+    val originalFilePath = s"${/}file.txt"
     val month = "1970-01"
     val date = "19700101"
-    decoratePath(originalFilePath, month, date) shouldBe "/1970-01/19700101_file.txt"
+    decoratePath(originalFilePath, month, date) shouldBe s"${/}1970-01${/}19700101_file.txt"
   }
 
   it should "rename and put to folder - example 2" in {
-    val originalFilePath = "/deep/folder/structure/file.txt"
+    val originalFilePath = s"${/}deep${/}folder${/}structure${/}file.txt"
     val month = "1970-01"
     val date = "19700101"
-    decoratePath(originalFilePath, month, date) shouldBe "/deep/folder/structure/1970-01/19700101_file.txt"
+    decoratePath(originalFilePath, month, date) shouldBe s"${/}deep${/}folder${/}structure${/}1970-01${/}19700101_file.txt"
   }
 
 }
